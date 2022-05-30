@@ -413,17 +413,17 @@ class PickPlace(SingleArmEnv):
         self.placement_initializer = SequentialCompositeSampler(name="ObjectSampler")
 
         # can sample anywhere in bin
-        bin_x_half = self.model.mujoco_arena.table_full_size[0] / 2 - 0.05
-        bin_y_half = self.model.mujoco_arena.table_full_size[1] / 2 - 0.05
+        bin_x_half = self.model.mujoco_arena.table_full_size[0] / 2 - 0.1   # - 0.05
+        bin_y_half = self.model.mujoco_arena.table_full_size[1] / 2 - 0.1  # - 0.05
 
         # each object should just be sampled in the bounds of the bin (with some tolerance)
         self.placement_initializer.append_sampler(
             sampler=UniformRandomSampler(
                 name="CollisionObjectSampler",
                 mujoco_objects=self.objects,
-                x_range=[-bin_x_half, bin_x_half],
-                y_range=[-bin_y_half, bin_y_half],
-                rotation=None,
+                x_range=[-bin_x_half, bin_x_half],  # [-bin_x_half, bin_x_half]
+                y_range=[-bin_y_half, bin_y_half],  # [-bin_y_half, bin_y_half]
+                rotation=0,  # modification: None (with rotation)
                 rotation_axis='z',
                 ensure_object_boundary_in_range=True,
                 ensure_valid_placement=True,
@@ -681,6 +681,10 @@ class PickPlace(SingleArmEnv):
                 else:
                     # Set the collision object joints
                     self.sim.data.set_joint_qpos(obj.joints[0], np.concatenate([np.array(obj_pos), np.array(obj_quat)]))
+
+            milk_pos, milk_quat, milk_obj = object_placements['Milk']
+            milk_pos = (0.0, -0.12, 0.885)  # (0.03, -0.22, 0.885)  # (0, 0, 0.885)
+            self.sim.data.set_joint_qpos(milk_obj.joints[0], np.concatenate([np.array(milk_pos), np.array(milk_quat)]))
 
         # Set the bins to the desired position
         self.sim.model.body_pos[self.sim.model.body_name2id("bin1")] = self.bin1_pos

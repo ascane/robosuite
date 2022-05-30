@@ -13,6 +13,8 @@ Example:
     $ python playback_demonstrations_from_hdf5.py --folder ../models/assets/demonstrations/SawyerPickPlace/
 """
 
+# python playback_demonstrations_from_hdf5.py --folder /home/chiaman/workspace/robosuite/robosuite/models/assets/demonstrations/1635154632_3343096
+
 import os
 import h5py
 import argparse
@@ -85,6 +87,7 @@ if __name__ == "__main__":
             num_actions = actions.shape[0]
 
             for j, action in enumerate(actions):
+                print(action)
                 env.step(action)
                 env.render()
 
@@ -99,6 +102,9 @@ if __name__ == "__main__":
 
             # force the sequence of internal mujoco states one by one
             for state in states:
+                # print(state)
+                # robot = env.robots[0]
+                # print(robot._joint_positions)
                 env.sim.set_state_from_flattened(state)
                 env.sim.forward()
                 env.render()

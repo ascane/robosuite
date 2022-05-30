@@ -313,7 +313,7 @@ class Lift(SingleArmEnv):
                 mujoco_objects=self.cube,
                 x_range=[-0.03, 0.03],
                 y_range=[-0.03, 0.03],
-                rotation=None,
+                rotation=0,  # modification: None (with rotation)
                 ensure_object_boundary_in_range=False,
                 ensure_valid_placement=True,
                 reference_pos=self.table_offset,

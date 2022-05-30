@@ -29,6 +29,7 @@ class DataCollectionWrapper(Wrapper):
 
         # in-memory cache for simulation states and action info
         self.states = []
+        self.eef_poss = []
         self.action_infos = []  # stores information about actions taken
 
         # how often to save simulation state, in terms of environment steps
@@ -118,10 +119,12 @@ class DataCollectionWrapper(Wrapper):
         np.savez(
             state_path,
             states=np.array(self.states),
+            eef_poss=np.array(self.eef_poss),
             action_infos=self.action_infos,
             env=env_name,
         )
         self.states = []
+        self.eef_poss = []
         self.action_infos = []
 
     def reset(self):
@@ -161,6 +164,8 @@ class DataCollectionWrapper(Wrapper):
         if self.t % self.collect_freq == 0:
             state = self.env.sim.get_state().flatten()
             self.states.append(state)
+
+            self.eef_poss.append(ret[0]['robot0_eef_pos'])
 
             info = {}
             info["actions"] = np.array(action)

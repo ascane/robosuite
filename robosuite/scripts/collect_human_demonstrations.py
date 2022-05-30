@@ -225,6 +225,12 @@ if __name__ == "__main__":
     tmp_directory = "/tmp/{}".format(str(time.time()).replace(".", "_"))
     env = DataCollectionWrapper(env, tmp_directory)
 
+    print(env.sim.get_state())
+    print(np.array(env.sim.get_state().flatten()))
+    obss = env. _observables.items()
+    for obs_name, obs in obss:
+        print(obs_name)
+
     # initialize device
     if args.device == "keyboard":
         from robosuite.devices import Keyboard
